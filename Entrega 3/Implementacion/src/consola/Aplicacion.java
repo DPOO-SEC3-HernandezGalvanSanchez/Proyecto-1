@@ -7,21 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import modelo.CoordinadorProyecto;
+import modelo.Participante;
+
+
 public class Aplicacion
 {
 	private ArchivoUsuarios archivoUsuarios = new ArchivoUsuarios();
-	private String usuarioEnUso;
-	private String nombreProyecto;
+	private CoordinadorProyecto coordinadorProyecto = new CoordinadorProyecto();
+	
+	private String loginEnUso;
+	private Participante usuarioEnUso;  //REVISAR
 	
 	
 	//EJECUCION GENERAL DE LA APLICACION
-	public void ejecutarAplicacion() 
+	private void ejecutarAplicacion()
+	{
+		ejecutarEleccionProyecto();
+		ejecutarManipularProyecto();
+	}
+	
+	
+	public void ejecutarEleccionProyecto() 
 	{
 		ingresarLogin();
 
-		boolean eleccionProyecto = true;
+		boolean continuar = true;
 		
-		while (eleccionProyecto)
+		while (continuar)
 		{
 			try
 			{
@@ -29,16 +42,56 @@ public class Aplicacion
 				int opcion_seleccionada = Integer.parseInt(input("Por favor seleccione una opcion"));
 				if (opcion_seleccionada == 1)
 				{
-					nombreProyecto = ejecutarCrearProyecto();
-					eleccionProyecto = false;
+					ejecutarCrearProyecto();
+					continuar = false;
 				}
 				
 				else if (opcion_seleccionada == 2)
 				{
-					nombreProyecto = ejecutarSeleccionarProyecto();
-					
-					if (nombreProyecto != "NO_ENCONTRADO")
-						eleccionProyecto = false;
+					continuar = ejecutarSeleccionarProyecto();
+				}
+				
+				else
+				{
+					System.out.println("Por favor seleccione una opcion valida.");
+				}
+			}
+			catch (NumberFormatException e)
+			{
+				System.out.println("Debe seleccionar uno de los numeros de las opciones.");
+			}
+		}
+	}
+	
+	
+	public void ejecutarManipularProyecto() 
+	{
+		boolean continuar = true;
+		
+		while (continuar)
+		{
+			try
+			{
+				mostrarMenuProyecto();
+				int opcion_seleccionada = Integer.parseInt(input("Por favor seleccione una opcion"));
+				if (opcion_seleccionada == 1)
+				{
+					ejecutarAgregarParticipante();
+				}
+				
+				else if (opcion_seleccionada == 2)
+				{
+					continuar = false;
+				}
+				
+				else if (opcion_seleccionada == 3)
+				{
+					continuar = false;
+				}
+				
+				else if (opcion_seleccionada == 4)
+				{
+					continuar = false;
 				}
 				
 				else
@@ -56,8 +109,11 @@ public class Aplicacion
 	
 	//INICIO DE SESION
 	private void ingresarLogin() {
-		this.usuarioEnUso = input("Ingrese su login");
-		System.out.println("El correo a usar sera: " + usuarioEnUso + "@uniandes.edu.co");
+		this.loginEnUso = input("Ingrese su login");
+		String nombreUsuario = input("Ingrese su nombre");
+		System.out.println("\nEl correo a usar sera: " + loginEnUso + "@uniandes.edu.co");
+		
+		usuarioEnUso = new Participante(loginEnUso, nombreUsuario); //REVISAR
 	}
 	
 	
@@ -73,7 +129,7 @@ public class Aplicacion
 	}
 	
 	
-	private String ejecutarCrearProyecto()
+	private void ejecutarCrearProyecto()
 	{
 		String nombreProyecto = input("\nIngrese el nombre del nuevo proyecto");
 		String descripcion = input("Ingrese la descripcion");
@@ -87,17 +143,18 @@ public class Aplicacion
 			tiposActividades.add(tipo);
 		}
 		
-		archivoUsuarios.guardarProyecto(usuarioEnUso, nombreProyecto);
-		//coordinadorProyecto.crearProyecto(nombreProyecto, descripcion, tiposActividades);
+		archivoUsuarios.guardarProyecto(loginEnUso, nombreProyecto);
+		coordinadorProyecto.crearProyecto(nombreProyecto, descripcion, tiposActividades, usuarioEnUso);
 		
-		return nombreProyecto;
+		System.out.println("\nEl proyecto fue creado con exito");
+		
 	}
 	
 	
-	private String ejecutarSeleccionarProyecto()
+	private boolean ejecutarSeleccionarProyecto()
 	{
-		String nombreProyecto = "NO_ENCONTRADO";
-		ArrayList<String> proyectosDelUsuario = archivoUsuarios.getProyectosUsuario(usuarioEnUso);
+		boolean continuar = true;
+		ArrayList<String> proyectosDelUsuario = archivoUsuarios.getProyectosUsuario(loginEnUso);
 		
 		if (proyectosDelUsuario == null)
 			System.out.println("\nUsted no tiene ningun proyecto registrado en el sistema");
@@ -116,11 +173,46 @@ public class Aplicacion
 			
 			int seleccionProyecto = Integer.parseInt(input("\nIngrese la opcion del proyecto que desea seleccionar"));
 			int index = seleccionProyecto - 1;
-			nombreProyecto = proyectosDelUsuario.get(index);
-			//coordinadorProyecto.seleccionarProyecto(String nombreProyecto);
+			String nombreProyecto = proyectosDelUsuario.get(index);
+			coordinadorProyecto.seleccionarProyecto(nombreProyecto);
+			continuar = false;
 		}
 		
-		return nombreProyecto;
+		return continuar;
+	}
+	
+	
+	// MANIPULACION DEL PROYECTO
+	private void mostrarMenuProyecto() {
+		
+		System.out.println("\n----------------------------------");
+		System.out.println("INFORMACION DEL PROYECTO\n");
+		System.out.println("Nombre: ");
+		System.out.println("Descripcion: ");
+		System.out.println("Participantes: ");
+		
+		
+		System.out.println("\n----------------------------------");
+		System.out.println("MENU DEL PROYECTO");
+		System.out.println("----------------------------------");
+		
+		System.out.println("\nUsted puede realizar las siguientes acciones:");
+		System.out.println("1. Agregar un participante");
+		System.out.println("2. Registrar una actividad");
+		System.out.println("3. Modificar el registro de actividades");
+		System.out.println("4. Mostrar el reporte de un participante");
+	}
+	
+	
+	private void ejecutarAgregarParticipante()
+	{
+		String nombreParticipante = input("Ingrese el nombre del participante a agregar");
+		String loginParticipante = input("Ingrese el login del participante a agregar");
+		
+		Participante nuevoParticipante = new Participante(loginParticipante, nombreParticipante);
+		coordinadorProyecto.agregarParticipante(nuevoParticipante);
+		
+		System.out.println(nombreParticipante + " fue agregado con exito al proyecto");
 	}
 	
 	

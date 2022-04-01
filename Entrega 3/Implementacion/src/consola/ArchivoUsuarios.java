@@ -68,19 +68,14 @@ public class ArchivoUsuarios
 		 */
  
 		ArrayList<String> proyectosEstudiante1 = new ArrayList<String>();
-		proyectosEstudiante1.add("E1P1");
+		proyectosEstudiante1.add("P1");
 		proyectosUsuarios.put("estudiante1", proyectosEstudiante1);
 		
 		ArrayList<String> proyectosEstudiante2 = new ArrayList<String>();
-		proyectosEstudiante2.add("E2P1");
-		proyectosEstudiante2.add("E2P2");
+		proyectosEstudiante2.add("P1");
+		proyectosEstudiante2.add("P2");
 		proyectosUsuarios.put("estudiante2", proyectosEstudiante2);
-		
-		ArrayList<String> proyectosEstudiante3 = new ArrayList<String>();
-		proyectosEstudiante3.add("E3P1");
-		proyectosEstudiante3.add("E3P2");
-		proyectosEstudiante3.add("E3P3");
-		proyectosUsuarios.put("estudiante3", proyectosEstudiante3);
+
 	}
 
 	/*

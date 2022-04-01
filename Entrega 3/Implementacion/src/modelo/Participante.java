@@ -17,9 +17,9 @@ public class Participante
 		return nombre;
 	}
 
-	public void setNombre(String nombre)
+	public String getLogin()
 	{
-		this.nombre = nombre;
-	}	
+		return loginCorreo;
+	}
 	
 }
