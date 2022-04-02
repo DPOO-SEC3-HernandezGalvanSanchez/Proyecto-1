@@ -1,6 +1,7 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CoordinadorProyecto
 {
@@ -10,7 +11,7 @@ public class CoordinadorProyecto
 	private ArchivadorProyectos archivoProyectos = new ArchivadorProyectos();
 	
 	
-	//METODOS
+	//METODOS DEL COORDINADOR
 	public void crearProyecto(String nombreProyecto, String descripcion,
 							  ArrayList<String> tiposActividades, Participante autor)
 	{	
@@ -18,7 +19,7 @@ public class CoordinadorProyecto
 		 * Se asigna como 'proyectoEnUso' un proyecto nuevo y lo guarda en el archivo
 		 */
 		
-		proyectoEnUso = new Proyecto(nombreProyecto, descripcion, tiposActividades, autor);
+		proyectoEnUso = new GestorActividades(nombreProyecto, descripcion, tiposActividades, autor);
 		archivoProyectos.guardarInfoProyecto(proyectoEnUso);
 	}
 	
@@ -33,10 +34,46 @@ public class CoordinadorProyecto
 	}
 	
 	
+	//METODOS DEL PROYECTO
+	public String getNombreProyecto()
+	{
+		return proyectoEnUso.getNombre();
+	}
+	
+	
+	public String getDescripcionProyecto()
+	{
+		return proyectoEnUso.getDescripcion();
+	}
+	
+	
+	public ArrayList<String> getTiposActividades()
+	{
+		return proyectoEnUso.getTiposActividades();
+	}
+	
+	
+	public HashMap<String, Participante> getParticipantes()
+	{
+		return proyectoEnUso.getParticipantes();
+	}
+	
+	
 	public void agregarParticipante(Participante nuevoParticipante)
 	{
 		proyectoEnUso.agregarParticipante(nuevoParticipante);
 		archivoProyectos.guardarInfoProyecto(proyectoEnUso);
 	}
+	
+	
+	public void registrarActividad(String tipoActividad, String titulo, String descripcion,
+								   String horaInicio, String horaFin, Participante participante)
+	{
+		Actividad nuevaActividad = new Actividad(tipoActividad, titulo, descripcion,
+												 horaInicio, horaFin, participante);
 		
+		proyectoEnUso.agregarActividad(nuevaActividad);
+	}
+
+
 }

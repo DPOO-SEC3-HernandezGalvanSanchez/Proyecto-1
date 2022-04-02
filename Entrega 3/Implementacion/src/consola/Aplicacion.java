@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.HashMap;
 
 import modelo.CoordinadorProyecto;
 import modelo.Participante;
@@ -23,6 +22,7 @@ public class Aplicacion
 	//EJECUCION GENERAL DE LA APLICACION
 	private void ejecutarAplicacion()
 	{
+		ingresarLogin();
 		ejecutarEleccionProyecto();
 		ejecutarManipularProyecto();
 	}
@@ -30,8 +30,6 @@ public class Aplicacion
 	
 	public void ejecutarEleccionProyecto() 
 	{
-		ingresarLogin();
-
 		boolean continuar = true;
 		
 		while (continuar)
@@ -49,6 +47,11 @@ public class Aplicacion
 				else if (opcion_seleccionada == 2)
 				{
 					continuar = ejecutarSeleccionarProyecto();
+				}
+				
+				else if (opcion_seleccionada == 3)
+				{
+					System.exit(0);
 				}
 				
 				else
@@ -81,7 +84,7 @@ public class Aplicacion
 				
 				else if (opcion_seleccionada == 2)
 				{
-					continuar = false;
+					ejecutarRegistrarActividad();
 				}
 				
 				else if (opcion_seleccionada == 3)
@@ -92,6 +95,16 @@ public class Aplicacion
 				else if (opcion_seleccionada == 4)
 				{
 					continuar = false;
+				}
+				
+				else if (opcion_seleccionada == 5)
+				{
+					ejecutarEleccionProyecto();
+				}
+							
+				else if (opcion_seleccionada == 6)
+				{
+					System.exit(0);
 				}
 				
 				else
@@ -109,11 +122,23 @@ public class Aplicacion
 	
 	//INICIO DE SESION
 	private void ingresarLogin() {
-		this.loginEnUso = input("Ingrese su login");
-		String nombreUsuario = input("Ingrese su nombre");
-		System.out.println("\nEl correo a usar sera: " + loginEnUso + "@uniandes.edu.co");
+		this.loginEnUso = input("Ingrese su login uniandes");
+		usuarioEnUso = archivoUsuarios.getParticipante(loginEnUso);
 		
-		usuarioEnUso = new Participante(loginEnUso, nombreUsuario); //REVISAR
+		if (usuarioEnUso == null)
+		{
+			System.out.println("\nUsted no se encuentra registrado en el sistema\n");
+			String nombreUsuario = input("Por favor ingrese su nombre");
+			System.out.println("\nEl correo a usar sera: " + loginEnUso + "@uniandes.edu.co");
+			usuarioEnUso = new Participante(loginEnUso, nombreUsuario);
+		}
+		
+		else
+		{
+			System.out.println("\nSu informacion de sesion es la siguiente");
+			System.out.println("Nombre: " + usuarioEnUso.getNombre());
+			System.out.println("Correo: " + usuarioEnUso.getCorreo());
+		}
 	}
 	
 	
@@ -125,7 +150,8 @@ public class Aplicacion
 		
 		System.out.println("\nUsted puede realizar las siguientes acciones:");
 		System.out.println("1. Crear un nuevo proyecto");
-		System.out.println("2. Seleccionar un proyecto existente\n");	
+		System.out.println("2. Seleccionar un proyecto existente");
+		System.out.println("3. Cerrar la aplicacion\n");
 	}
 	
 	
@@ -187,8 +213,8 @@ public class Aplicacion
 		
 		System.out.println("\n----------------------------------");
 		System.out.println("INFORMACION DEL PROYECTO\n");
-		System.out.println("Nombre: ");
-		System.out.println("Descripcion: ");
+		System.out.println("Nombre: " + coordinadorProyecto.getNombreProyecto());
+		System.out.println("Descripcion: " + coordinadorProyecto.getDescripcionProyecto());
 		System.out.println("Participantes: ");
 		
 		
@@ -201,18 +227,73 @@ public class Aplicacion
 		System.out.println("2. Registrar una actividad");
 		System.out.println("3. Modificar el registro de actividades");
 		System.out.println("4. Mostrar el reporte de un participante");
+		System.out.println("5. Volver al menu anterior");
+		System.out.println("6. Cerrar la aplicacion\n");
 	}
 	
 	
 	private void ejecutarAgregarParticipante()
 	{
-		String nombreParticipante = input("Ingrese el nombre del participante a agregar");
+		String nombreParticipante = input("\nIngrese el nombre del participante a agregar");
 		String loginParticipante = input("Ingrese el login del participante a agregar");
 		
 		Participante nuevoParticipante = new Participante(loginParticipante, nombreParticipante);
 		coordinadorProyecto.agregarParticipante(nuevoParticipante);
 		
-		System.out.println(nombreParticipante + " fue agregado con exito al proyecto");
+		System.out.println("\n" + nombreParticipante + " fue agregado con exito al proyecto");
+	}
+	
+	
+	private void ejecutarRegistrarActividad()
+	{
+		//Autor de la actividad
+		Participante autor = usuarioEnUso;
+		int preguntaParticipante = Integer.parseInt(input("\nSi el autor de la actividad es usted, digite 0. De lo contrario, digite 1"));
+		
+		if (preguntaParticipante != 0)
+		{
+			HashMap<String, Participante> participantesProyecto = coordinadorProyecto.getParticipantes();
+			ArrayList<String> nombres = new ArrayList<String>(participantesProyecto.keySet());
+			int numParticipantes = nombres.size();
+				
+			System.out.println("\nEl proyecto cuenta con los siguientes participantes:");
+				
+			for (int i = 1; i <= numParticipantes; i++)
+			{
+				int index = i - 1;
+				String nombreParticipante = nombres.get(index);
+				System.out.println(i + ". " + nombreParticipante);
+			}
+				
+			int opcionParticipante = Integer.parseInt(input("\nSeleccione el autor de la actividad")) - 1;
+			String nombreParticipante = nombres.get(opcionParticipante);
+			autor = participantesProyecto.get(nombreParticipante);
+		}		
+				
+		
+		//Tipo de actividad
+		ArrayList<String> tiposActividades = coordinadorProyecto.getTiposActividades();
+		int numTipos = tiposActividades.size();
+		
+		System.out.println("\nEl proyecto cuenta con los siguientes tipos de actividades:");
+		
+		for (int i = 1; i <= numTipos; i++)
+		{
+			int index = i - 1;
+			String tipo = tiposActividades.get(index);
+			System.out.println(i + ". " + tipo);
+		}
+		
+		int opcionTipo = Integer.parseInt(input("\nSeleccione el tipo es la actividad a registrar")) - 1;
+		String tipoActividad = tiposActividades.get(opcionTipo);
+		
+		
+		//Informacion de la actividad
+		String titulo = input("\nIngrese el titulo de la actividad");
+		String descripcion = input("Ingrese una descripcion");
+		
+		coordinadorProyecto.registrarActividad(tipoActividad, titulo, descripcion,
+											   "00:00", "08:00", autor);
 	}
 	
 	

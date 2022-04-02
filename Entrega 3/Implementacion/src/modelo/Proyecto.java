@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class Proyecto
+public abstract class Proyecto
 {
 	// ATRIBUTOS
 	private String nombreProyecto;
@@ -12,7 +12,7 @@ public class Proyecto
 	private ArrayList<String> tiposActividades;
 	
 	private HashMap<String, Participante> participantes = new HashMap<String, Participante>();
-	private ArrayList<Actividad> actividades = new ArrayList<Actividad>();
+	protected HashMap<String, ArrayList<Actividad>> actividades = new HashMap<String, ArrayList<Actividad>>();
 	
 	
 	// CONSTRUCTOR
@@ -27,7 +27,7 @@ public class Proyecto
 	}
 	
 	
-	// METODOS
+	// METODOS DEL PROYECTO
 	public String getNombre()
 	{
 		return nombreProyecto;
@@ -40,29 +40,35 @@ public class Proyecto
 	}
 
 
-	public ArrayList<String> getTiposActividades()     //REVISAR ENCAPSULAMIENTO
+	public ArrayList<String> getTiposActividades()
 	{
-		return tiposActividades;
+		ArrayList<String> tiposCopia = new ArrayList<String>(tiposActividades);
+		return tiposCopia;
 	}
 
 
-	public HashMap<String, Participante> getParticipantes()  //REVISAR ENCAPSULAMIENTO
+	public HashMap<String, Participante> getParticipantes()
 	{
-		return participantes;
+		HashMap<String, Participante> participantesCopia = new HashMap<String, Participante>(participantes);
+		return participantesCopia;
 	}
 
 
-	public ArrayList<Actividad> getActividades()       //REVISAR ENCAPSULAMIENTO
+	public HashMap<String, ArrayList<Actividad>> getActividades() 
 	{
-		return actividades;
+		HashMap<String, ArrayList<Actividad>> actividadesCopia = new HashMap<String, ArrayList<Actividad>>(actividades);
+		return actividadesCopia;
 	}
 	
 	
 	public void agregarParticipante(Participante nuevoParticipante)
 	{
-		String login = nuevoParticipante.getLogin();
-		participantes.put(login, nuevoParticipante);
+		String nombre = nuevoParticipante.getNombre();
+		participantes.put(nombre, nuevoParticipante);
 	}
 	
+	
+	// METODOS PARA GESTIONAR ACTIVIDADES
+	public abstract void agregarActividad(Actividad nuevaActividad);
 	
 }

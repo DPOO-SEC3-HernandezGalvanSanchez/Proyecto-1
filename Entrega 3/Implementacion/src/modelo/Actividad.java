@@ -5,6 +5,7 @@ import modelo.Participante;
 public class Actividad
 {
 
+	private String idActividad; 
 	private String tipoActividad;
 	private String titulo;
 	private String descripcion;
@@ -23,8 +24,8 @@ public class Actividad
 		this.horaFin = horaFin;
 		this.autor = autor;
 	}
-
-
+	
+	//GETTERS
 	public String getTipoActividad()
 	{
 		return tipoActividad;
