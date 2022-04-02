@@ -1,29 +1,30 @@
 package modelo;
 
-import modelo.Participante;
 
 public class Actividad
 {
-
-	private String idActividad; 
 	private String tipoActividad;
 	private String titulo;
 	private String descripcion;
+	private String fecha;
 	private String horaInicio;
 	private String horaFin;
 	private Participante autor;
 	
 	
+	//CONSTRUCTOR
 	public Actividad(String tipoActividad, String titulo, String descripcion,
-					 String horaInicio, String horaFin, Participante autor)
+					 String fecha, String horaInicio, String horaFin, Participante autor)
 	{
 		this.tipoActividad = tipoActividad;
 		this.titulo = titulo;
 		this.descripcion = descripcion;
+		this.fecha = fecha;
 		this.horaInicio = horaInicio;
 		this.horaFin = horaFin;
 		this.autor = autor;
 	}
+	
 	
 	//GETTERS
 	public String getTipoActividad()
@@ -44,6 +45,12 @@ public class Actividad
 	}
 
 
+	public String getFecha()
+	{
+		return fecha;
+	}
+	
+	
 	public String getHoraInicio()
 	{
 		return horaInicio;
@@ -61,4 +68,22 @@ public class Actividad
 		return autor;
 	}
 	
+	
+	//SETTERS
+	public void setFecha(String nuevaFecha)
+	{
+		this.fecha = nuevaFecha;
+	}
+	
+	
+	public void setHoraInicio(String nuevaHoraInicio)
+	{
+		this.horaInicio = nuevaHoraInicio;
+	}
+	
+	
+	public void setHoraFin(String nuevaHoraFin)
+	{
+		this.horaFin = nuevaHoraFin;
+	}
 }

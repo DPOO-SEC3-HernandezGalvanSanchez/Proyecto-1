@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 public class CoordinadorProyecto
 {
-
 	//ATRIBUTOS
 	private Proyecto proyectoEnUso;
 	private ArchivadorProyectos archivoProyectos = new ArchivadorProyectos();
@@ -59,6 +58,12 @@ public class CoordinadorProyecto
 	}
 	
 	
+	public HashMap<String, ArrayList<Actividad>> getActividades()
+	{
+		return proyectoEnUso.getActividades();
+	}
+	
+	
 	public void agregarParticipante(Participante nuevoParticipante)
 	{
 		proyectoEnUso.agregarParticipante(nuevoParticipante);
@@ -66,14 +71,43 @@ public class CoordinadorProyecto
 	}
 	
 	
-	public void registrarActividad(String tipoActividad, String titulo, String descripcion,
+	// METODOS DE LAS ACTIVIDADES
+	public void registrarActividad(String tipoActividad, String titulo, String descripcion, String fecha,
 								   String horaInicio, String horaFin, Participante participante)
 	{
-		Actividad nuevaActividad = new Actividad(tipoActividad, titulo, descripcion,
+		Actividad nuevaActividad = new Actividad(tipoActividad, titulo, descripcion, fecha,
 												 horaInicio, horaFin, participante);
 		
-		proyectoEnUso.agregarActividad(nuevaActividad);
+		proyectoEnUso.registrarActividad(nuevaActividad);
+		archivoProyectos.guardarInfoProyecto(proyectoEnUso);
 	}
 
+	
+	public void modificarFechaActividad(String titulo, int index,
+							   			String nuevaFecha)
+	{
+		proyectoEnUso.modificarFechaActividad(titulo, index,
+											  nuevaFecha);
+		archivoProyectos.guardarInfoProyecto(proyectoEnUso);
+	}
+	
+	
+	public void modificarHoraInicio(String titulo, int index,
+   									String nuevaHoraInicio)
+	{
+		proyectoEnUso.modificarHoraInicio(titulo, index,
+										  nuevaHoraInicio);
+		archivoProyectos.guardarInfoProyecto(proyectoEnUso);
+	}
+	
+	
+	public void modificarHoraFin(String titulo, int index,
+								 String nuevaHoraFin)
+	{
+		proyectoEnUso.modificarHoraFin(titulo, index,
+				  					   nuevaHoraFin);
+		archivoProyectos.guardarInfoProyecto(proyectoEnUso);
+	}
 
+	
 }

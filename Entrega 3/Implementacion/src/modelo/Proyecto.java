@@ -69,6 +69,13 @@ public abstract class Proyecto
 	
 	
 	// METODOS PARA GESTIONAR ACTIVIDADES
-	public abstract void agregarActividad(Actividad nuevaActividad);
+	public abstract void registrarActividad(Actividad nuevaActividad);
 	
+	public abstract void modificarFechaActividad(String titulo, int index, String nuevaFecha);
+
+	public abstract void modificarHoraInicio(String titulo, int index, String nuevaHoraInicio);
+	
+	public abstract void modificarHoraFin(String titulo, int index, String nuevaHoraFin);
+	
+
 }

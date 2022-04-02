@@ -3,9 +3,12 @@ package consola;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
+import modelo.Actividad;
 import modelo.CoordinadorProyecto;
 import modelo.Participante;
 
@@ -16,19 +19,33 @@ public class Aplicacion
 	private CoordinadorProyecto coordinadorProyecto = new CoordinadorProyecto();
 	
 	private String loginEnUso;
-	private Participante usuarioEnUso;  //REVISAR
+	private Participante usuarioEnUso;
+	private String FECHA;
+	private String HORA_ACTUAL;
 	
 	
 	//EJECUCION GENERAL DE LA APLICACION
-	private void ejecutarAplicacion()
+	public void ejecutarAplicacion()
 	{
+		SimpleDateFormat formatter1 = new SimpleDateFormat("dd/MM/yyyy"); 
+		FECHA = formatter1.format(Calendar.getInstance().getTime());
+		
+		SimpleDateFormat formatter2 = new SimpleDateFormat("HH:mm"); 
+		HORA_ACTUAL = formatter2.format(Calendar.getInstance().getTime());
+		
+		System.out.println("BIENVENIDO A LA APLICACION");
+		System.out.println("\nAntes de empezar, por favor tenga en cuenta que se utilizaran");
+		System.out.println("los siguientes como parametros temporales:");
+		System.out.println("Fecha: " + FECHA);
+		System.out.println("Hora: " + HORA_ACTUAL);
+		System.out.println("\n-------------------------------------------------------------");
 		ingresarLogin();
 		ejecutarEleccionProyecto();
 		ejecutarManipularProyecto();
 	}
 	
 	
-	public void ejecutarEleccionProyecto() 
+	private void ejecutarEleccionProyecto() 
 	{
 		boolean continuar = true;
 		
@@ -67,7 +84,7 @@ public class Aplicacion
 	}
 	
 	
-	public void ejecutarManipularProyecto() 
+	private void ejecutarManipularProyecto() 
 	{
 		boolean continuar = true;
 		
@@ -89,7 +106,7 @@ public class Aplicacion
 				
 				else if (opcion_seleccionada == 3)
 				{
-					continuar = false;
+					ejecutarModificarRegistro();
 				}
 				
 				else if (opcion_seleccionada == 4)
@@ -103,6 +120,58 @@ public class Aplicacion
 				}
 							
 				else if (opcion_seleccionada == 6)
+				{
+					System.exit(0);
+				}
+				
+				else
+				{
+					System.out.println("Por favor seleccione una opcion valida.");
+				}
+			}
+			catch (NumberFormatException e)
+			{
+				System.out.println("Debe seleccionar uno de los numeros de las opciones.");
+			}
+		}
+	}
+	
+	
+	public void ejecutarModificarRegistro()
+	{
+		HashMap<String, ArrayList<Actividad>> actividades = coordinadorProyecto.getActividades();
+		String titulo = seleccionarTitulo(actividades);
+		int index = seleccionarRegistro(actividades, titulo);
+		
+		boolean continuar = true;
+		
+		while (continuar)
+		{
+			try
+			{				
+				mostrarMenuRegistro(actividades, titulo, index);
+				int opcion_seleccionada = Integer.parseInt(input("Por favor seleccione una opcion"));
+				if (opcion_seleccionada == 1)
+				{
+					modificarFechaActividad(titulo, index);
+				}
+				
+				else if (opcion_seleccionada == 2)
+				{
+					modificarHoraInicio(titulo, index);
+				}
+				
+				else if (opcion_seleccionada == 3)
+				{
+					modificarHoraFin(titulo, index);
+				}
+				
+				else if (opcion_seleccionada == 4)
+				{
+					ejecutarManipularProyecto();
+				}
+				
+				else if (opcion_seleccionada == 5)
 				{
 					System.exit(0);
 				}
@@ -208,14 +277,13 @@ public class Aplicacion
 	}
 	
 	
-	// MANIPULACION DEL PROYECTO
+	//MANIPULACION DEL PROYECTO
 	private void mostrarMenuProyecto() {
 		
 		System.out.println("\n----------------------------------");
 		System.out.println("INFORMACION DEL PROYECTO\n");
 		System.out.println("Nombre: " + coordinadorProyecto.getNombreProyecto());
 		System.out.println("Descripcion: " + coordinadorProyecto.getDescripcionProyecto());
-		System.out.println("Participantes: ");
 		
 		
 		System.out.println("\n----------------------------------");
@@ -227,7 +295,7 @@ public class Aplicacion
 		System.out.println("2. Registrar una actividad");
 		System.out.println("3. Modificar el registro de actividades");
 		System.out.println("4. Mostrar el reporte de un participante");
-		System.out.println("5. Volver al menu anterior");
+		System.out.println("5. Volver al menu de eleccion del proyecto");
 		System.out.println("6. Cerrar la aplicacion\n");
 	}
 	
@@ -262,7 +330,7 @@ public class Aplicacion
 			{
 				int index = i - 1;
 				String nombreParticipante = nombres.get(index);
-				System.out.println(i + ". " + nombreParticipante);
+				System.out.println("(" + i + ") " + nombreParticipante);
 			}
 				
 			int opcionParticipante = Integer.parseInt(input("\nSeleccione el autor de la actividad")) - 1;
@@ -281,7 +349,7 @@ public class Aplicacion
 		{
 			int index = i - 1;
 			String tipo = tiposActividades.get(index);
-			System.out.println(i + ". " + tipo);
+			System.out.println("(" + i + ") " + tipo);
 		}
 		
 		int opcionTipo = Integer.parseInt(input("\nSeleccione el tipo es la actividad a registrar")) - 1;
@@ -291,9 +359,111 @@ public class Aplicacion
 		//Informacion de la actividad
 		String titulo = input("\nIngrese el titulo de la actividad");
 		String descripcion = input("Ingrese una descripcion");
+		String horaInicio = input("Ingrese la hora de inicio");
 		
 		coordinadorProyecto.registrarActividad(tipoActividad, titulo, descripcion,
-											   "00:00", "08:00", autor);
+											   FECHA, horaInicio, HORA_ACTUAL, autor);
+	}
+	
+	
+	//MODIFICAR REGISTRO DE ACTIVIDADES
+	private String seleccionarTitulo(HashMap<String, ArrayList<Actividad>> actividades)
+	{
+		ArrayList<String> titulos = new ArrayList<String>(actividades.keySet());
+		int numTitulos = titulos.size();
+		
+		System.out.println("\nSe tiene registro de actividades con los siguientes titulos: ");
+		
+		for (int i=1; i<=numTitulos; i++)
+		{
+			int index = i - 1;
+			String tituloIndex = titulos.get(index);
+			System.out.println(i + ". " + tituloIndex);
+		}
+		
+		int index = Integer.parseInt(input("\nSeleccione el titulo de la actividad que busca")) - 1;
+		String titulo = titulos.get(index);
+		
+		return titulo;
+	}
+	
+	
+	private int seleccionarRegistro(HashMap<String, ArrayList<Actividad>> actividades,
+									String titulo)
+	{
+		ArrayList<Actividad> registros = actividades.get(titulo);
+		int numRegistros = registros.size();
+		
+		System.out.println("\nLa actividad seleccionada presenta registros en las siguientes fechas: ");
+		
+		for (int i=1; i<=numRegistros; i++)
+		{
+			int index = i - 1;
+			Actividad registro = registros.get(index);
+			String fecha = registro.getFecha();
+			String horaInicio = registro.getHoraInicio();
+			String horaFin = registro.getHoraFin();
+			System.out.println(i + ". " + fecha + " de " + horaInicio + " a " + horaFin);
+		}
+		
+		int index = Integer.parseInt(input("\nSeleccione el registro que desea modificar")) - 1;
+		
+		return index;
+	}
+	
+	
+	private void mostrarMenuRegistro(HashMap<String, ArrayList<Actividad>> actividades,
+									 String titulo, int index)
+	{
+		ArrayList<Actividad> homonimas = actividades.get(titulo);
+		Actividad registro = homonimas.get(index);
+		String nombreAutor = registro.getAutor().getNombre();
+		
+		
+		System.out.println("\n----------------------------------");
+		System.out.println("INFORMACION DE LA ACTIVIDAD\n");
+		System.out.println("Titulo: " + registro.getTitulo());
+		System.out.println("Descripcion: " + registro.getDescripcion());
+		System.out.println("Autor: " + nombreAutor);
+		System.out.println("Fecha: " + registro.getFecha());
+		System.out.println("Hora de inicio: " + registro.getHoraInicio());
+		System.out.println("Hora de terminacion: " + registro.getHoraFin());
+		
+		
+		System.out.println("\n----------------------------------");
+		System.out.println("MENU DE LA ACTIVIDAD");
+		System.out.println("----------------------------------");
+		
+		System.out.println("\nUsted puede realizar las siguientes acciones:");
+		System.out.println("1. Modificar fecha");
+		System.out.println("2. Modificar hora de inicio");
+		System.out.println("3. Modificar hora de terminacion");
+		System.out.println("4. Volver al menu del proyecto");
+		System.out.println("5. Cerrar la aplicacion\n");
+	}
+	
+	
+	private void modificarFechaActividad(String titulo, int index)
+	{
+		String nuevaFecha = input("\nPor favor ingrese la nueva fecha en formato dd/MM/yyyy");
+		coordinadorProyecto.modificarFechaActividad(titulo, index, nuevaFecha);
+		System.out.println("Se cambio con exito la fecha de la actividad");
+	}
+	
+	
+	private void modificarHoraInicio(String titulo, int index)
+	{
+		String nuevaHoraInicio = input("\nPor favor ingrese la hora de inicio en formato HH:mm");
+		coordinadorProyecto.modificarHoraInicio(titulo, index, nuevaHoraInicio);
+		System.out.println("Se cambio con exito la hora inicial de la actividad");
+	}
+	
+	
+	private void modificarHoraFin(String titulo, int index)
+	{
+		String nuevaHoraFin = input("\nPor favor ingrese la hora de terminacion en formato HH:mm");
+		coordinadorProyecto.modificarHoraFin(titulo, index, nuevaHoraFin);
+		System.out.println("Se cambio con exito la hora de terminacion de la actividad");
 	}
 	
 	
@@ -322,8 +492,7 @@ public class Aplicacion
 	//INICIO DE LA APLICACION
 	public static void main(String[] args)
 	{
-		System.out.println("Aplicacion");
-		Aplicacion consola = new Aplicacion();
+		Aplicacion consola = new Aplicacion();		
 		consola.ejecutarAplicacion();
 	}
 }
