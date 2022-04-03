@@ -27,7 +27,7 @@ public class ReporteParticipante
 	 return actividadesPorMiembro;
  }
  
-public void tiempoTotal() {
+public void tiempoTotal(ArrayList<Actividad> actividadesPorMiembro) {
 	 
  }
 
