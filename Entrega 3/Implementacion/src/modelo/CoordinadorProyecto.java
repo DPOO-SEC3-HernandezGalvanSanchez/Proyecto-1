@@ -8,6 +8,7 @@ public class CoordinadorProyecto
 	//ATRIBUTOS
 	private Proyecto proyectoEnUso;
 	private ArchivadorProyectos archivoProyectos = new ArchivadorProyectos();
+	private ReporteParticipante reporte = new ReporteParticipante();
 	
 	
 	//METODOS DEL COORDINADOR
@@ -116,4 +117,25 @@ public class CoordinadorProyecto
 	}
 
 	
+	// METODOS DEL REPORTE
+	public ArrayList<Actividad> actividadesMiembro(String loginParticipante)
+	{
+		HashMap<String, ArrayList<Actividad>> actividades = proyectoEnUso.getActividades();
+		return reporte.actividadesMiembro(loginParticipante, actividades);
+	}
+	
+	
+	public int tiempoTotal(ArrayList<Actividad> actividadesPorMiembro)
+	{
+		return reporte.tiempoTotal(actividadesPorMiembro);
+	}
+	
+	
+	public HashMap<String, Double> tiempoPorActividad(ArrayList<Actividad> actividadesDelMiembro)
+	{
+		ArrayList<String> tiposDeActividades = getTiposActividades();
+		return reporte.tiempoPorActividad(actividadesDelMiembro, tiposDeActividades);
+	}
+	
+		
 }

@@ -11,7 +11,6 @@ import java.util.HashMap;
 import modelo.Actividad;
 import modelo.CoordinadorProyecto;
 import modelo.Participante;
-import modelo.ReporteParticipante;
 
 
 public class Aplicacion
@@ -23,6 +22,7 @@ public class Aplicacion
 	private Participante usuarioEnUso;
 	private String FECHA;
 	private String HORA_ACTUAL;
+	
 	
 	
 	//EJECUCION GENERAL DE LA APLICACION
@@ -43,6 +43,27 @@ public class Aplicacion
 		ingresarLogin();
 		ejecutarEleccionProyecto();
 		ejecutarManipularProyecto();
+	}
+	
+	
+	private void ingresarLogin() {
+		this.loginEnUso = input("Ingrese su login uniandes");
+		usuarioEnUso = archivoUsuarios.getParticipante(loginEnUso);
+		
+		if (usuarioEnUso == null)
+		{
+			System.out.println("\nUsted no se encuentra registrado en el sistema\n");
+			String nombreUsuario = input("Por favor ingrese su nombre");
+			System.out.println("\nEl correo a usar sera: " + loginEnUso + "@uniandes.edu.co");
+			usuarioEnUso = new Participante(loginEnUso, nombreUsuario);
+		}
+		
+		else
+		{
+			System.out.println("\nSu informacion de sesion es la siguiente");
+			System.out.println("Nombre: " + usuarioEnUso.getNombre());
+			System.out.println("Correo: " + usuarioEnUso.getCorreo());
+		}
 	}
 	
 	
@@ -75,12 +96,12 @@ public class Aplicacion
 				
 				else
 				{
-					System.out.println("Por favor seleccione una opcion valida.");
+					System.out.println("\nPor favor seleccione una opcion valida.");
 				}
 			}
 			catch (NumberFormatException e)
 			{
-				System.out.println("Debe seleccionar uno de los numeros de las opciones.");
+				System.out.println("\nDebe seleccionar uno de los numeros de las opciones.");
 			}
 		}
 	}
@@ -129,12 +150,12 @@ public class Aplicacion
 				
 				else
 				{
-					System.out.println("Por favor seleccione una opcion valida.");
+					System.out.println("\nPor favor seleccione una opcion valida.");
 				}
 			}
 			catch (NumberFormatException e)
 			{
-				System.out.println("Debe seleccionar uno de los numeros de las opciones.");
+				System.out.println("\nDebe seleccionar uno de los numeros de las opciones.");
 			}
 		}
 	}
@@ -182,69 +203,21 @@ public class Aplicacion
 				
 				else
 				{
-					System.out.println("Por favor seleccione una opcion valida.");
+					System.out.println("\nPor favor seleccione una opcion valida.");
 				}
 			}
 			catch (NumberFormatException e)
 			{
-				System.out.println("Debe seleccionar uno de los numeros de las opciones.");
+				System.out.println("\nDebe seleccionar uno de los numeros de las opciones.");
 			}
 		}
 	}
 	
-	public void ejecutarMostrarReporte()
-	{
-		HashMap<String, Participante> participantes = coordinadorProyecto.getParticipantes();
-		HashMap<String, ArrayList<Actividad>> actividades = coordinadorProyecto.getActividades();
-		ArrayList<String> tiposDeActividades = coordinadorProyecto.getTiposActividades();
-		ReporteParticipante reporte = new ReporteParticipante(actividades);
-		
-		for(String participante:participantes.keySet()) {
-			Participante valor = participantes.get(participante);
-			System.out.println(participante);
-			ArrayList<Actividad> actividadesMiembro = reporte.actividadesMiembro(valor);
-			for(Actividad actividad:actividadesMiembro) {
-				System.out.println("Titulo: " + actividad.getTitulo() + ",Tipo de actividad: " + actividad.getTipoActividad() +
-				",Descripcion: " + actividad.getDescripcion() + ",Fecha: " + actividad.getFecha() + ",Hora inicio: " + actividad.getHoraInicio()+
-				",Hora final: " + actividad.getHoraFin() + ",Duracion: " + actividad.getTiempo());
-			}
-			int total = reporte.tiempoTotal(actividadesMiembro);
-			System.out.println("Tiempo total invertido (minutos): " + total);
-			HashMap<String, Float> promedios = reporte.tiempoPorActividad(actividadesMiembro,tiposDeActividades);
-			for(String tipo: promedios.keySet()) {
-				float promedio = promedios.get(tipo);
-				System.out.println(tipo + ": " + promedio);
-			}
-			System.out.println("\n");
-		}
-	}
-	
-	
-	//INICIO DE SESION
-	private void ingresarLogin() {
-		this.loginEnUso = input("Ingrese su login uniandes");
-		usuarioEnUso = archivoUsuarios.getParticipante(loginEnUso);
-		
-		if (usuarioEnUso == null)
-		{
-			System.out.println("\nUsted no se encuentra registrado en el sistema\n");
-			String nombreUsuario = input("Por favor ingrese su nombre");
-			System.out.println("\nEl correo a usar sera: " + loginEnUso + "@uniandes.edu.co");
-			usuarioEnUso = new Participante(loginEnUso, nombreUsuario);
-		}
-		
-		else
-		{
-			System.out.println("\nSu informacion de sesion es la siguiente");
-			System.out.println("Nombre: " + usuarioEnUso.getNombre());
-			System.out.println("Correo: " + usuarioEnUso.getCorreo());
-		}
-	}
 	
 	
 	//ELECCION DEL PROYECTO
 	private void mostrarMenuParticipante() {
-		System.out.println("\n----------------------------------");
+		System.out.println("\n\n----------------------------------");
 		System.out.println("MENU DE ELECCION DEL PROYECTO");
 		System.out.println("----------------------------------");
 		
@@ -308,10 +281,11 @@ public class Aplicacion
 	}
 	
 	
+	
 	//MANIPULACION DEL PROYECTO
 	private void mostrarMenuProyecto() {
 		
-		System.out.println("\n----------------------------------");
+		System.out.println("\n\n----------------------------------");
 		System.out.println("INFORMACION DEL PROYECTO\n");
 		System.out.println("Nombre: " + coordinadorProyecto.getNombreProyecto());
 		System.out.println("Descripcion: " + coordinadorProyecto.getDescripcionProyecto());
@@ -397,6 +371,45 @@ public class Aplicacion
 	}
 	
 	
+	public void ejecutarMostrarReporte()
+	{
+		HashMap<String, Participante> participantes = coordinadorProyecto.getParticipantes();
+		
+		// TIEMPO TOTAL INVERTIDO
+		for(String nombreParticipante:participantes.keySet())
+		{
+			System.out.println("\n\n-----------------------------------------");
+			System.out.println("REPORTE DE: " + nombreParticipante);
+			String login = participantes.get(nombreParticipante).getLogin();
+			ArrayList<Actividad> actividadesMiembro = coordinadorProyecto.actividadesMiembro(login);
+			System.out.println("\nActividades realizadas:");
+			
+			for(Actividad actividad:actividadesMiembro)
+			{
+				System.out.println("- Titulo: " + actividad.getTitulo());
+				System.out.println("  Tipo: " + actividad.getTipoActividad());
+				System.out.println("  Fecha: " + actividad.getFecha());
+				System.out.println("  Duracion: " + actividad.getTiempo() + " minutos\n");
+			}
+			
+			int total = coordinadorProyecto.tiempoTotal(actividadesMiembro);
+			System.out.println("TIEMPO TOTAL INVERTIDO: " + total + " minutos\n");
+			
+			
+			// TIEMPO PROMEDIO POR ACTIVIDAD
+			System.out.println("TIEMPO PROMEDIO POR TIPO DE ACTIVIDAD: ");
+			HashMap<String, Double> promedios = coordinadorProyecto.tiempoPorActividad(actividadesMiembro);
+			
+			for(String tipo: promedios.keySet())
+			{
+				double promedio = promedios.get(tipo);
+				System.out.println("- " + tipo + ": " + promedio + " minutos");
+			}
+		}
+	}
+	
+	
+	
 	//MODIFICAR REGISTRO DE ACTIVIDADES
 	private String seleccionarTitulo(HashMap<String, ArrayList<Actividad>> actividades)
 	{
@@ -451,7 +464,7 @@ public class Aplicacion
 		String nombreAutor = registro.getAutor().getNombre();
 		
 		
-		System.out.println("\n----------------------------------");
+		System.out.println("\n\n----------------------------------");
 		System.out.println("INFORMACION DE LA ACTIVIDAD\n");
 		System.out.println("Titulo: " + registro.getTitulo());
 		System.out.println("Descripcion: " + registro.getDescripcion());
@@ -498,6 +511,7 @@ public class Aplicacion
 	}
 	
 	
+	
 	//METODOS AUXILIARES
 	public String input(String mensaje)
 	{
@@ -520,10 +534,14 @@ public class Aplicacion
 	}
 	
 	
+	
 	//INICIO DE LA APLICACION
 	public static void main(String[] args)
 	{
 		Aplicacion consola = new Aplicacion();		
 		consola.ejecutarAplicacion();
 	}
+
+
+
 }
