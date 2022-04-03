@@ -15,8 +15,8 @@ import modelo.Participante;
 
 public class Aplicacion
 {
-	private ArchivoUsuarios archivoUsuarios = new ArchivoUsuarios();
 	private CoordinadorProyecto coordinadorProyecto = new CoordinadorProyecto();
+	private ArchivoUsuarios archivoUsuarios = new ArchivoUsuarios();
 	
 	private String loginEnUso;
 	private Participante usuarioEnUso;

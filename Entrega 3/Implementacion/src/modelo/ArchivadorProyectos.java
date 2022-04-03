@@ -1,7 +1,15 @@
 package modelo;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+
 
 public class ArchivadorProyectos
 {
@@ -12,7 +20,19 @@ public class ArchivadorProyectos
 	// CONSTRUCTOR
 	public ArchivadorProyectos()
 	{
-		cargarProyectos();
+		try
+		{
+			cargarProyectos();
+		}
+		catch (FileNotFoundException e)
+		{
+			System.err.println("ERROR: el archivo indicado no se encontro.");
+		}
+		catch (IOException e)
+		{
+			System.err.println("ERROR: hubo un problema leyendo el archivo.");
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	
@@ -37,19 +57,79 @@ public class ArchivadorProyectos
 		catalogoProyectos.put(nombreProyecto, proyecto);
 	}
 	
-	
-	public void cargarProyectos()
+
+	public Proyecto cargarUnProyecto(String[] partes)
 	{
-		/*
-		 * Cargar los proyectos registrados en el sistema
-		 * 
-		 * HASTA EL MOMENTO GENERA UN PROTOTIPO
-		 */
+		String titulo = partes[1];
+		String descripcion = partes[2];
+		ArrayList<String> tipos = new ArrayList<String>(Arrays.asList(partes[3].split(";")));
+		String[] datosCreador = partes[4].split(";");
+		Participante creador = new Participante(datosCreador[0], datosCreador[1]);
 		
+		Proyecto proyectoActual = new GestorActividades(titulo, descripcion, tipos, creador);
+		
+		if (partes.length > 5)
+		{
+			for (int i=5; i<partes.length; i++)
+			{
+				String[] datosParticipante = partes[4].split(";");
+				Participante participante = new Participante(datosParticipante[0], datosParticipante[1]);
+				proyectoActual.agregarParticipante(participante);
+			}
+		}
+		catalogoProyectos.put(titulo, proyectoActual);
+		
+		return proyectoActual;
+	}
+	
+	
+	public void cargarProyectos() throws FileNotFoundException, IOException
+	{
+		BufferedReader br = new BufferedReader(new FileReader("./data/proyectos.csv", StandardCharsets.UTF_8));
+		String linea = br.readLine();
+		String[] partes1 = linea.split(",");
+		Proyecto proyectoActual = cargarUnProyecto(partes1);
+		linea = br.readLine();
+		
+		while (linea != null)
+		{
+			String[] partes = linea.split(",");
+			
+			if (partes[0].equals("PROY"))
+			{
+				proyectoActual = cargarUnProyecto(partes);
+			}
+			
+			else if (partes[0].equals("ACT"))
+			{
+				String tipoActividad = partes[1];
+				String titulo = partes[2];
+				String descripcion = partes[3];
+				String fecha = partes[4];
+				String horaInicio = partes[5];
+				String horaFin = partes[6];
+				String[] datosAutor = partes[7].split(";");
+				Participante autor = new Participante(datosAutor[0], datosAutor[1]);
+				
+				Actividad nuevaActividad = new Actividad(tipoActividad, titulo, descripcion,
+						 								 fecha, horaInicio, horaFin, autor);
+				
+				proyectoActual.registrarActividad(nuevaActividad);
+				
+			}
+			linea = br.readLine();
+		}
+	}
+
+	
+	/*
+	 * public void cargarProyectos()
+	{		
 		//Tipos de actividades
 		ArrayList<String> tipos = new ArrayList<String>();
-		tipos.add("tipo1");
-		tipos.add("tipo2");
+		tipos.add("Documentacion");
+		tipos.add("Implementacion");
+		tipos.add("Pruebas");
 		
 		
 		//Usuarios
@@ -58,26 +138,26 @@ public class ArchivadorProyectos
 		
 		
 		//Proyectos
-		Proyecto proyecto1 = new GestorActividades("P1", "descripcionP1", tipos, estudiante1);
+		Proyecto proyecto1 = new GestorActividades("ProyectoPrueba1", "descripcionP1", tipos, estudiante1);
 		proyecto1.agregarParticipante(estudiante2);
 		catalogoProyectos.put("P1", proyecto1);
 		
-		Proyecto proyecto2 = new GestorActividades("P2", "descripcionP2", tipos, estudiante2);
+		Proyecto proyecto2 = new GestorActividades("ProyectoPrueba2", "descripcionP2", tipos, estudiante2);
 		catalogoProyectos.put("P2", proyecto2);
 		
 		
 		//Actividades
-		Actividad r1p1 = new Actividad("tipo1", "A1P1", "descripcionA1P1A",
+		Actividad r1p1 = new Actividad("Documentacion", "A1P1", "descripcionA1P1A",
 									   "01/01/2022", "12:30", "13:30",
 									   estudiante1);
-		Actividad r2p1 = new Actividad("tipo1", "A1P1", "descripcionA1P1B",
+		Actividad r2p1 = new Actividad("Implementacion", "A1P1", "descripcionA1P1B",
 				   					   "05/01/2022", "15:30", "18:00",
 				   					   estudiante2);
-		Actividad r3p1 = new Actividad("tipo1", "A1P1", "descripcionA1P1C",
+		Actividad r3p1 = new Actividad("Implementacion", "A1P1", "descripcionA1P1C",
 				   					   "15/02/2022", "08:00", "08:30",
 				   					   estudiante1);
-		Actividad r4p1 = new Actividad("tipo2", "A2P1", "descripcionA2P1",
-				   					   "01/01/2022", "20:00", "21:00",
+		Actividad r4p1 = new Actividad("Pruebas", "A2P1", "descripcionA2P1",
+				   					   "01/04/2022", "20:00", "21:00",
 				   					   estudiante2);
 		proyecto1.registrarActividad(r1p1);
 		proyecto1.registrarActividad(r2p1);
@@ -85,11 +165,11 @@ public class ArchivadorProyectos
 		proyecto1.registrarActividad(r4p1);
 		
 		
-		Actividad r1p2 = new Actividad("tipo1", "A1P2", "descripcionA1P2",
-				   					   "01/04/2022", "16:30", "17:30",
+		Actividad r1p2 = new Actividad("Documentacion", "A1P2", "descripcionA1P2",
+				   					   "01/03/2022", "16:30", "17:30",
 				   					   estudiante2);
 		proyecto2.registrarActividad(r1p2);
 	}
-
-
+	 */
+	
 }

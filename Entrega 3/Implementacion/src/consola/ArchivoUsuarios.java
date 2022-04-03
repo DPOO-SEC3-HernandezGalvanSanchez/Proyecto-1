@@ -82,7 +82,7 @@ public class ArchivoUsuarios
 		infoUsuarios.put("loginE1", e1);
 		
 		ArrayList<String> proyectosEstudiante1 = new ArrayList<String>();
-		proyectosEstudiante1.add("P1");
+		proyectosEstudiante1.add("ProyectoPrueba1");
 		proyectosUsuarios.put("loginE1", proyectosEstudiante1);
 
 		
@@ -91,8 +91,8 @@ public class ArchivoUsuarios
 		infoUsuarios.put("loginE2", e2);
 		
 		ArrayList<String> proyectosEstudiante2 = new ArrayList<String>();
-		proyectosEstudiante2.add("P1");
-		proyectosEstudiante2.add("P2");
+		proyectosEstudiante2.add("ProyectoPrueba1");
+		proyectosEstudiante2.add("ProyectoPrueba2");
 		proyectosUsuarios.put("loginE2", proyectosEstudiante2);
 	}
 
