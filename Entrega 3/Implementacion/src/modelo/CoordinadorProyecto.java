@@ -33,6 +33,12 @@ public class CoordinadorProyecto
 	}
 	
 	
+	public void guardarArchivo()
+	{
+		archivoProyectos.guardarArchivo();
+	}
+	
+	
 	//METODOS DEL PROYECTO
 	public String getNombreProyecto()
 	{

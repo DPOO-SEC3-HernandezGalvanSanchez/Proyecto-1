@@ -86,8 +86,6 @@ public class ArchivoUsuarios
 	{
 		/*
 		 * Cargar los usuarios del sistema y sus proyectos
-		 * 
-		 * HASTA EL MOMENTO GENERA UN PROTOTIPO
 		 */
 		
 		BufferedReader br = new BufferedReader(new FileReader("./data/auxiliar.txt", StandardCharsets.UTF_8));
@@ -111,35 +109,7 @@ public class ArchivoUsuarios
 			proyectosUsuarios.put(login, proyectos);
 			linea = br.readLine();
 		}
-		
 		br.close();
-		
- 
-		/*Agregar estudiante 1
-		Participante e1 = new Participante("loginE1", "nombreE1");
-		infoUsuarios.put("loginE1", e1);
-		
-		ArrayList<String> proyectosEstudiante1 = new ArrayList<String>();
-		proyectosEstudiante1.add("ProyectoPrueba1");
-		proyectosUsuarios.put("loginE1", proyectosEstudiante1);
-
-		
-		//Agregar estudiante 2
-		Participante e2 = new Participante("loginE2", "nombreE2");
-		infoUsuarios.put("loginE2", e2);
-		
-		ArrayList<String> proyectosEstudiante2 = new ArrayList<String>();
-		proyectosEstudiante2.add("ProyectoPrueba1");
-		proyectosEstudiante2.add("ProyectoPrueba2");
-		proyectosUsuarios.put("loginE2", proyectosEstudiante2);*/
 	}
-
-	/*
-	public static void main(String[] args)
-	{
-		ArchivoUsuarios archivo = new ArchivoUsuarios();
-		System.out.println(archivo.getProyectosUsuario("estudiante4"));
-	}
-	 */
 	
 }

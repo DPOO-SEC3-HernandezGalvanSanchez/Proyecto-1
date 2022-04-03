@@ -68,6 +68,7 @@ public class Aplicacion
 				
 				else if (opcion_seleccionada == 3)
 				{
+					coordinadorProyecto.guardarArchivo();
 					System.exit(0);
 				}
 				
@@ -121,6 +122,7 @@ public class Aplicacion
 							
 				else if (opcion_seleccionada == 6)
 				{
+					coordinadorProyecto.guardarArchivo();
 					System.exit(0);
 				}
 				
@@ -173,6 +175,7 @@ public class Aplicacion
 				
 				else if (opcion_seleccionada == 5)
 				{
+					coordinadorProyecto.guardarArchivo();
 					System.exit(0);
 				}
 				

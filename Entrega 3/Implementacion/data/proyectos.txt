@@ -1,0 +1,7 @@
+PROY,ProyectoPrueba1,descripcionP1,Documentacion;Implementacion;Pruebas,loginE1;nombreE1,loginE2;nombreE2,,,
+ACT,Documentacion,A1P1,descripcionA1P1A,1/01/2022,12:30,13:30,loginE1;nombreE1,ProyectoPrueba1
+ACT,Implementacion,A1P1,descripcionA1P1B,5/01/2022,15:30,18:00,loginE2;nombreE2,ProyectoPrueba1
+ACT,Documentacion,A1P1,descripcionA1P1C,15/02/2022,8:00,8:30,loginE1;nombreE1,ProyectoPrueba1
+ACT,Documentacion,A2P1,descripcionA2P1,1/04/2022,20:00,21:00,loginE2;nombreE2,ProyectoPrueba1
+PROY,ProyectoPrueba2,descripcionP2,Documentacion;Implementacion;Pruebas,loginE2;nombreE2,,,,
+ACT,Documentacion,A1P2,descripcionA1P2,1/03/2022,16:30,17:30,loginE2;nombreE2,ProyectoPrueba2
