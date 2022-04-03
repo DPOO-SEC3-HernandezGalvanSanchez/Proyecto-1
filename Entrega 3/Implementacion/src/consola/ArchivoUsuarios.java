@@ -100,11 +100,11 @@ public class ArchivoUsuarios
 			
 			Participante pn = new Participante(login,nombre);
 			ArrayList<String> proyectos = new ArrayList<String>();
-			int tamaño = datos.length;
+			int tamano = datos.length;
 			
 			infoUsuarios.put(login, pn);
 			
-			for (int i = 2; i<tamaño;i++)
+			for (int i = 2; i<tamano;i++)
 			{
 				proyectos.add(datos[i]);
 			}
