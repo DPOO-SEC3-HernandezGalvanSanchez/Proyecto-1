@@ -11,6 +11,7 @@ import java.util.HashMap;
 import modelo.Actividad;
 import modelo.CoordinadorProyecto;
 import modelo.Participante;
+import modelo.ReporteParticipante;
 
 
 public class Aplicacion
@@ -111,7 +112,7 @@ public class Aplicacion
 				
 				else if (opcion_seleccionada == 4)
 				{
-					continuar = false;
+					ejecutarMostrarReporte();
 				}
 				
 				else if (opcion_seleccionada == 5)
@@ -185,6 +186,20 @@ public class Aplicacion
 			{
 				System.out.println("Debe seleccionar uno de los numeros de las opciones.");
 			}
+		}
+	}
+	
+	public void ejecutarMostrarReporte()
+	{
+		HashMap<String, Participante> participantes = coordinadorProyecto.getParticipantes();
+		HashMap<String, ArrayList<Actividad>> actividades = coordinadorProyecto.getActividades();
+		ReporteParticipante reporte = new ReporteParticipante(actividades);
+		
+		for(String participante:participantes.keySet()) {
+			Participante valor = participantes.get(participante);
+			ArrayList<Actividad> actividadesMiembro = reporte.actividadesMiembro(valor);
+			reporte.tiempoTotal();
+			reporte.tiempoPorActividad();
 		}
 	}
 	
