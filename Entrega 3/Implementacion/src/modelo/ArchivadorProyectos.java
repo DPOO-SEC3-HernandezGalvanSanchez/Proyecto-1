@@ -179,8 +179,6 @@ public class ArchivadorProyectos
 	{
 		String login = datosParticipante[0];
 		String nombre = datosParticipante[1];
-		System.out.println(login);
-		System.out.println(tituloProyecto);
 		
 		if (this.usuariosProyectos.containsKey(login))
 		{
