@@ -1,5 +1,10 @@
 package consola;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,9 +19,17 @@ public class ArchivoUsuarios
 	
 	
 	// CONSTRUCTOR
-	public ArchivoUsuarios()
+	public ArchivoUsuarios() 
 	{
-		cargarUsuarios();
+		try {
+			cargarUsuarios();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -69,15 +82,40 @@ public class ArchivoUsuarios
 	}
 	
 	
-	private void cargarUsuarios()
+	private void cargarUsuarios() throws FileNotFoundException, IOException
 	{
 		/*
 		 * Cargar los usuarios del sistema y sus proyectos
 		 * 
 		 * HASTA EL MOMENTO GENERA UN PROTOTIPO
 		 */
+		
+		BufferedReader br = new BufferedReader(new FileReader("./data/auxiliar.txt", StandardCharsets.UTF_8));
+		String linea = br.readLine();
+		while (linea != null)
+		{
+			String[] datos = linea.split(";");
+			String login = datos[0];
+			String nombre = datos[1];
+			
+			Participante pn = new Participante(login,nombre);
+			ArrayList<String> proyectos = new ArrayList<String>();
+			int tamano = datos.length;
+			
+			infoUsuarios.put(login, pn);
+			
+			for (int i = 2; i<tamano;i++)
+			{
+				proyectos.add(datos[i]);
+			}
+			proyectosUsuarios.put(login, proyectos);
+			linea = br.readLine();
+		}
+		
+		br.close();
+		
  
-		//Agregar estudiante 1
+		/*Agregar estudiante 1
 		Participante e1 = new Participante("loginE1", "nombreE1");
 		infoUsuarios.put("loginE1", e1);
 		
@@ -93,7 +131,7 @@ public class ArchivoUsuarios
 		ArrayList<String> proyectosEstudiante2 = new ArrayList<String>();
 		proyectosEstudiante2.add("ProyectoPrueba1");
 		proyectosEstudiante2.add("ProyectoPrueba2");
-		proyectosUsuarios.put("loginE2", proyectosEstudiante2);
+		proyectosUsuarios.put("loginE2", proyectosEstudiante2);*/
 	}
 
 	/*

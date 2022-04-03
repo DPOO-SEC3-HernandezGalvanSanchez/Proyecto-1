@@ -1,21 +1,20 @@
 package modelo;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 
 public class ArchivadorProyectos
 {
 	// ATRIBUTOS
 	private HashMap<String, Proyecto> catalogoProyectos = new HashMap<String, Proyecto>();
-	
+	private HashMap<String,ArrayList<String>> usuariosProyectos = new HashMap<String,ArrayList<String>>();
 	
 	// CONSTRUCTOR
 	public ArchivadorProyectos()
@@ -65,6 +64,7 @@ public class ArchivadorProyectos
 		ArrayList<String> tipos = new ArrayList<String>(Arrays.asList(partes[3].split(";")));
 		String[] datosCreador = partes[4].split(";");
 		Participante creador = new Participante(datosCreador[0], datosCreador[1]);
+		registrarParticipante(datosCreador,titulo);
 		
 		Proyecto proyectoActual = new GestorActividades(titulo, descripcion, tipos, creador);
 		
@@ -72,8 +72,9 @@ public class ArchivadorProyectos
 		{
 			for (int i=5; i<partes.length; i++)
 			{
-				String[] datosParticipante = partes[4].split(";");
+				String[] datosParticipante = partes[i].split(";");
 				Participante participante = new Participante(datosParticipante[0], datosParticipante[1]);
+				registrarParticipante(datosParticipante, titulo);
 				proyectoActual.agregarParticipante(participante);
 			}
 		}
@@ -119,6 +120,8 @@ public class ArchivadorProyectos
 			}
 			linea = br.readLine();
 		}
+		br.close();
+		generarAuxiliar();
 	}
 
 	
@@ -171,5 +174,56 @@ public class ArchivadorProyectos
 		proyecto2.registrarActividad(r1p2);
 	}
 	 */
+	
+	private void registrarParticipante(String[] datosParticipante, String tituloProyecto)
+	{
+		String login = datosParticipante[0];
+		String nombre = datosParticipante[1];
+		
+		if (this.usuariosProyectos.containsKey(login))
+		{
+			usuariosProyectos.get(login).add(tituloProyecto);
+		}
+		else
+		{
+			ArrayList<String> newList = new ArrayList<String>();
+			newList.add(nombre);
+			newList.add(tituloProyecto);
+			usuariosProyectos.put(login, newList);
+		}
+	}
+	
+	
+	private void generarAuxiliar()
+	{
+		try
+		{
+		BufferedWriter fw = new BufferedWriter(new FileWriter("data/auxiliar.txt"));
+		Iterator<String> i = usuariosProyectos.keySet().iterator();
+		
+		while(i.hasNext())
+		{
+			String login = i.next();
+			ArrayList<String> datos = usuariosProyectos.get(login);
+			String nombre = datos.get(0);
+			String linea = (login + ";" +  nombre);
+			for (int j= 1; j<datos.size(); j++)
+			{
+				linea = linea + ";" + datos.get(j);
+			}
+			
+			fw.write(linea);
+			fw.newLine();
+		}
+		fw.close();
+		
+		
+		}
+		catch (IOException e)
+		{
+			System.err.println("ERROR: hubo un problema generando archivo auxiliar.");
+		}
+				
+	}
 	
 }
