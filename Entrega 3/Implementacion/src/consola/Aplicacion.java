@@ -11,6 +11,7 @@ import java.util.HashMap;
 import modelo.Actividad;
 import modelo.CoordinadorProyecto;
 import modelo.Participante;
+import modelo.ReporteParticipante;
 
 
 public class Aplicacion
@@ -112,7 +113,7 @@ public class Aplicacion
 				
 				else if (opcion_seleccionada == 4)
 				{
-					continuar = false;
+					ejecutarMostrarReporte();
 				}
 				
 				else if (opcion_seleccionada == 5)
@@ -188,6 +189,33 @@ public class Aplicacion
 			{
 				System.out.println("Debe seleccionar uno de los numeros de las opciones.");
 			}
+		}
+	}
+	
+	public void ejecutarMostrarReporte()
+	{
+		HashMap<String, Participante> participantes = coordinadorProyecto.getParticipantes();
+		HashMap<String, ArrayList<Actividad>> actividades = coordinadorProyecto.getActividades();
+		ArrayList<String> tiposDeActividades = coordinadorProyecto.getTiposActividades();
+		ReporteParticipante reporte = new ReporteParticipante(actividades);
+		
+		for(String participante:participantes.keySet()) {
+			Participante valor = participantes.get(participante);
+			System.out.println(participante);
+			ArrayList<Actividad> actividadesMiembro = reporte.actividadesMiembro(valor);
+			for(Actividad actividad:actividadesMiembro) {
+				System.out.println("Titulo: " + actividad.getTitulo() + ",Tipo de actividad: " + actividad.getTipoActividad() +
+				",Descripcion: " + actividad.getDescripcion() + ",Fecha: " + actividad.getFecha() + ",Hora inicio: " + actividad.getHoraInicio()+
+				",Hora final: " + actividad.getHoraFin() + ",Duracion: " + actividad.getTiempo());
+			}
+			int total = reporte.tiempoTotal(actividadesMiembro);
+			System.out.println("Tiempo total invertido (minutos): " + total);
+			HashMap<String, Float> promedios = reporte.tiempoPorActividad(actividadesMiembro,tiposDeActividades);
+			for(String tipo: promedios.keySet()) {
+				float promedio = promedios.get(tipo);
+				System.out.println(tipo + ": " + promedio);
+			}
+			System.out.println("\n");
 		}
 	}
 	
@@ -297,7 +325,7 @@ public class Aplicacion
 		System.out.println("1. Agregar un participante");
 		System.out.println("2. Registrar una actividad");
 		System.out.println("3. Modificar el registro de actividades");
-		System.out.println("4. Mostrar el reporte de un participante");
+		System.out.println("4. Mostrar el reporte de cada uno de los participantes");
 		System.out.println("5. Volver al menu de eleccion del proyecto");
 		System.out.println("6. Cerrar la aplicacion\n");
 	}
