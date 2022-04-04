@@ -14,19 +14,23 @@ public class Participante
 		this.correo = loginCorreo + "@uniandes.edu.co";
 	}
 
+	
 	public String getNombre()
 	{
 		return nombre;
 	}
 
+	
 	public String getLogin()
 	{
 		return loginCorreo;
 	}
 	
+	
 	public String getCorreo()
 	{
 		return correo;
 	}
+	
 	
 }

@@ -161,7 +161,7 @@ public class Aplicacion
 	}
 	
 	
-	public void ejecutarModificarRegistro()
+	private void ejecutarModificarRegistro()
 	{
 		HashMap<String, ArrayList<Actividad>> actividades = coordinadorProyecto.getActividades();
 		String titulo = seleccionarTitulo(actividades);
@@ -232,6 +232,12 @@ public class Aplicacion
 	{
 		String nombreProyecto = input("\nIngrese el nombre del nuevo proyecto");
 		String descripcion = input("Ingrese la descripcion");
+		String fechaInicio = input("Ingrese la fecha de inicio (si es hoy, digite 0)");
+		String fechaFin = input("Ingrese la fecha de finalizacion");
+		
+		if (fechaInicio.equals("0"))
+			fechaInicio = FECHA;
+		
 		ArrayList<String> tiposActividades = new ArrayList<String>();
 		
 		int numTipos = Integer.parseInt(input("Ingrese cuantos tipos de actividades desea tener"));
@@ -243,7 +249,8 @@ public class Aplicacion
 		}
 		
 		archivoUsuarios.guardarProyecto(loginEnUso, nombreProyecto);
-		coordinadorProyecto.crearProyecto(nombreProyecto, descripcion, tiposActividades, usuarioEnUso);
+		coordinadorProyecto.crearProyecto(nombreProyecto, descripcion, fechaInicio,
+										  fechaFin, tiposActividades, usuarioEnUso);
 		
 		System.out.println("\nEl proyecto fue creado con exito");
 		
@@ -289,6 +296,8 @@ public class Aplicacion
 		System.out.println("INFORMACION DEL PROYECTO\n");
 		System.out.println("Nombre: " + coordinadorProyecto.getNombreProyecto());
 		System.out.println("Descripcion: " + coordinadorProyecto.getDescripcionProyecto());
+		System.out.println("Fecha de inicio: " + coordinadorProyecto.getFechaInicio());
+		System.out.println("Fecha estimada de finalizacion: " + coordinadorProyecto.getFechaFin());
 		
 		
 		System.out.println("\n----------------------------------");
@@ -371,7 +380,7 @@ public class Aplicacion
 	}
 	
 	
-	public void ejecutarMostrarReporte()
+	private void ejecutarMostrarReporte()
 	{
 		HashMap<String, Participante> participantes = coordinadorProyecto.getParticipantes();
 		
@@ -513,7 +522,7 @@ public class Aplicacion
 	
 	
 	//METODOS AUXILIARES
-	public String input(String mensaje)
+	private String input(String mensaje)
 	{
 		/*
 		 * METODO PARA INGRESAR INFORMACION POR CONSOLA
@@ -543,5 +552,5 @@ public class Aplicacion
 	}
 
 
-
+	
 }

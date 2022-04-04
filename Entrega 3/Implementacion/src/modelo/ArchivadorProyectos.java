@@ -37,7 +37,7 @@ public class ArchivadorProyectos
 	
 	
 	// CARGA DEL ARCHIVO	
-	public void cargarProyectos() throws FileNotFoundException, IOException
+	private void cargarProyectos() throws FileNotFoundException, IOException
 	{
 		BufferedReader br = new BufferedReader(new FileReader("./data/proyectos.txt", StandardCharsets.UTF_8));
 		String linea = br.readLine();
@@ -77,20 +77,23 @@ public class ArchivadorProyectos
 	}
 
 	
-	public void cargarUnProyecto(String[] partes)
+	private void cargarUnProyecto(String[] partes)
 	{
 		String titulo = partes[1];
 		String descripcion = partes[2];
 		ArrayList<String> tipos = new ArrayList<String>(Arrays.asList(partes[3].split(";")));
-		String[] datosCreador = partes[4].split(";");
+		String fechaInicio = partes[4];
+		String fechaFin = partes[5];
+		String[] datosCreador = partes[6].split(";");
 		Participante creador = new Participante(datosCreador[0], datosCreador[1]);
 		registrarParticipante(datosCreador,titulo);
 		
-		Proyecto proyectoActual = new GestorActividades(titulo, descripcion, tipos, creador);
+		Proyecto proyectoActual = new GestorActividades(titulo, descripcion, fechaInicio,
+														fechaFin, tipos, creador);
 		
-		if (partes.length > 5)
+		if (partes.length > 7)
 		{
-			for (int i=5; i<partes.length; i++)
+			for (int i=7; i<partes.length; i++)
 			{
 				String[] datosParticipante = partes[i].split(";");
 				Participante participante = new Participante(datosParticipante[0], datosParticipante[1]);
@@ -206,6 +209,11 @@ public class ArchivadorProyectos
 			}
 			
 			lineaP += "," + tiposActividadesStr;
+			
+			String fechaInicio = elProyecto.getFechaInicio();
+			String fechaFin = elProyecto.getFechaFin();
+			
+			lineaP += "," + fechaInicio + "," + fechaFin;
 			
 			HashMap<String, Participante> participantes = elProyecto.getParticipantes();
 			Iterator<String> j = participantes.keySet().iterator();

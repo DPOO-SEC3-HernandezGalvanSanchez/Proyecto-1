@@ -6,10 +6,10 @@ public class GestorActividades extends Proyecto
 {
 
 	// CONSTRUCTOR
-	public GestorActividades(String nombreProyecto, String descripcion, ArrayList<String> tiposActividades,
-			Participante autor)
+	public GestorActividades(String nombreProyecto, String descripcion, String fechaInicio,
+							 String fechaFin, ArrayList<String> tiposActividades, Participante autor)
 	{
-		super(nombreProyecto, descripcion, tiposActividades, autor);
+		super(nombreProyecto, descripcion, fechaInicio, fechaFin, tiposActividades, autor);
 	}
 	
 	

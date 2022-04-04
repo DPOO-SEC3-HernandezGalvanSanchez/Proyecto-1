@@ -9,6 +9,8 @@ public abstract class Proyecto
 	// ATRIBUTOS
 	private String nombreProyecto;
 	private String descripcion;
+	private String fechaInicio;
+	private String fechaFin;
 	private ArrayList<String> tiposActividades;
 	
 	private HashMap<String, Participante> participantes = new HashMap<String, Participante>();
@@ -16,11 +18,13 @@ public abstract class Proyecto
 	
 	
 	// CONSTRUCTOR
-	public Proyecto(String nombreProyecto, String descripcion, ArrayList<String> tiposActividades,
-					Participante autor)
+	public Proyecto(String nombreProyecto, String descripcion, String fechaInicio,
+					String fechaFin, ArrayList<String> tiposActividades, Participante autor)
 	{
 		this.nombreProyecto = nombreProyecto;
 		this.descripcion = descripcion;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
 		this.tiposActividades = tiposActividades;
 		
 		agregarParticipante(autor);
@@ -37,6 +41,18 @@ public abstract class Proyecto
 	public String getDescripcion()
 	{
 		return descripcion;
+	}
+	
+	
+	public String getFechaInicio()
+	{
+		return fechaInicio;
+	}
+	
+	
+	public String getFechaFin()
+	{
+		return fechaFin;
 	}
 
 

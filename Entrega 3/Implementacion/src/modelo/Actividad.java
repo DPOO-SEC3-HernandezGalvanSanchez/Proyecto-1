@@ -70,10 +70,13 @@ public class Actividad
 		return autor;
 	}
 	
+	
 	public int getTiempo()
 	{
 		return tiempo;
 	}
+	
+	
 	//SETTERS
 	public void setFecha(String nuevaFecha)
 	{
@@ -106,6 +109,7 @@ public class Actividad
 	int total = (horas*60)+minutos;
 	return total;
 	}
+	
 	
 	private void actualizarTiempo()
 	{
