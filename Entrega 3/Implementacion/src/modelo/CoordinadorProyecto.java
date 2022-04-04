@@ -12,14 +12,15 @@ public class CoordinadorProyecto
 	
 	
 	//METODOS DEL COORDINADOR
-	public void crearProyecto(String nombreProyecto, String descripcion,
-							  ArrayList<String> tiposActividades, Participante autor)
+	public void crearProyecto(String nombreProyecto, String descripcion, String fechaInicio,
+							  String fechaFin, ArrayList<String> tiposActividades, Participante autor)
 	{	
 		/*
 		 * Se asigna como 'proyectoEnUso' un proyecto nuevo y lo guarda en el archivo
 		 */
 		
-		proyectoEnUso = new GestorActividades(nombreProyecto, descripcion, tiposActividades, autor);
+		proyectoEnUso = new GestorActividades(nombreProyecto, descripcion, fechaInicio,
+											  fechaFin, tiposActividades, autor);
 		archivoProyectos.guardarInfoProyecto(proyectoEnUso);
 	}
 	
@@ -50,6 +51,18 @@ public class CoordinadorProyecto
 	public String getDescripcionProyecto()
 	{
 		return proyectoEnUso.getDescripcion();
+	}
+	
+	
+	public String getFechaInicio()
+	{
+		return proyectoEnUso.getFechaInicio();
+	}
+	
+	
+	public String getFechaFin()
+	{
+		return proyectoEnUso.getFechaFin();
 	}
 	
 	
